@@ -28,7 +28,7 @@ def get_date_stamp_name(name):
   date_info= "".join(date_info)
   time_info = "".join(date_splits[1].split(".")[0].split(":"))
   basename = name.split(".failed")[0]
-  suffix = f"{basename}_bkp_{date_info}_{time_info}.failed"
+  suffix = basename + "_bkp_" + date_info + "_" + time_info + ".failed"
   return suffix
 
 
@@ -74,17 +74,17 @@ def handle_failed_rename(batch_folders):
     base_name = file_name.split(".failed")[0]
 
     # Copy as backup
-    shutil.copyfile(path, f"{base_path}/{new_name}")
+    shutil.copyfile(path, base_path + "/" +  new_name)
     # Rename file
-    os.rename(path,f"{base_path}/{base_name}")
+    os.rename(path,base_path+ "/" + base_name)
 
 
 def kill_process(pid):
-  call_sub_process(f"kill -9 {pid}")
-  print(f"Process {pid} killed!")
+  call_sub_process("kill -9 " + pid)
+  print("Process " + pid + " killed!")
 
 def kill_limit_manager(keyword , patternList):
-  output = run_sub_process(f"ps -ef|grep {keyword}")
+  output = run_sub_process("ps -ef|grep " + keyword)
   # print("Output ->" , output)
   for out in output:
     tokens  =  out.split(" ")
@@ -97,8 +97,8 @@ def handle_tomcat_restart():
   print("Started : Tomcat Restart")
   # stop script
   TOMCAT_PATH  = "/opt/tomcat/bin"
-  TOMCAT_STARTUP = f"{TOMCAT_PATH}/startup.sh"
-  TOMCAT_STOP = f"{TOMCAT_PATH}/shutdown.sh"
+  TOMCAT_STARTUP = TOMCAT_PATH + "/startup.sh"
+  TOMCAT_STOP = TOMCAT_PATH + "/shutdown.sh"
   call_sub_process(TOMCAT_STOP)
   call_sub_process(TOMCAT_STARTUP)
 
@@ -113,8 +113,8 @@ def handle_limter_restart():
   
   #start script
   SCRIPT_PATH = "/opt/ldm3/batch"
-  LISTENER_SCRIPT = f"{SCRIPT_PATH}/startLimitsMngrTriggerListener.sh"
-  LIMITSMNGR_SCRIPT = f"{SCRIPT_PATH}/StartLimitsMngr.sh &"
+  LISTENER_SCRIPT = SCRIPT_PATH + "/startLimitsMngrTriggerListener.sh"
+  LIMITSMNGR_SCRIPT = SCRIPT_PATH + "/StartLimitsMngr.sh &"
 
   call_sub_process(LISTENER_SCRIPT)
   call_sub_process(LIMITSMNGR_SCRIPT)
